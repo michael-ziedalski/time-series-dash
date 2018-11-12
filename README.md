@@ -1,2 +1,2 @@
 # time-series-dash
-Just an acorn of a project for time-series analysis with Python using Dash, under constant improvement.
+Just an acorn of a time-series visualization project with Python using Dash; under heavy development.
