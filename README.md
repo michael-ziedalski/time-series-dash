@@ -5,4 +5,4 @@ On the surface, gui has far to go to look passable, and code underneath will pro
 
 More statistical routines are planned to be added. Currently only SARIMA available.
 
-Instructions to run: set up a redis server with 'redis-server' in terminal, and fire off app.py.
+To run, simply set up a redis server with 'redis-server' in terminal and fire off app.py.
