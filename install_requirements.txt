@@ -1,3 +1,0 @@
-## Run this basic file to install all the dependencies.
-
-pip install pandas numpy pyramid-arima patsy datetime quandl dash dash_core_components dash_html_components flask_caching redis os 
