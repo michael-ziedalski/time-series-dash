@@ -32,7 +32,14 @@ stats_functions = [{'label': 'SARIMA', 'value': 'SARIMA'},
                  {'label': 'GARCH', 'value': 'GARCH'}]
 ## Available ptions for statistical routines (only two for now). 
 stats_options = [{'label': 'in-sample', 'value': 'insample'},
-                 {'label': 'forecast', 'value': 'forecast'}]    
+                 {'label': 'forecast', 'value': 'forecast'}]  
+
+## Fonts
+# Major label fonts
+major_fonts = "Arial"
+# Minor label fonts
+minor_fonts = "lato, Arial"
+
 
     
 ###### Main code ######
@@ -44,7 +51,7 @@ app.scripts.config.serve_locally = True
 app.config['suppress_callback_exceptions'] = True
 
 
-## Settings needed to memoize/save data (along with running Redis server)
+## Settings needed to memoize/save data (for now requires running Redis server)
 CACHE_CONFIG = {
     'CACHE_TYPE': 'redis',
     'CACHE_REDIS_URL': os.environ.get('REDIS_URL', 'localhost:6379')
@@ -57,63 +64,121 @@ cache.init_app(app.server, config=CACHE_CONFIG)
 ## New way
 app.layout = html.Div(children=[
     
-    html.H1(children='Basic Forecast'),
-    
+    ##1st extra-dimensional Div to force 1st set of columns left
     html.Div(children=[
-        html.Label('Input stock ticker:'),
-        
+        ## 1st set of two columns
         html.Div(children=[
-            
-            dcc.Input(id='online_input', value='AMZN', type='text')])
-    ]
-            ),
-    
-    
-    html.Div(children=[dcc.Dropdown(id='stats-function', options=stats_functions)],
-             style={'max-width':'200px'}),
-        
-    html.Div(children=[dcc.Dropdown(id='stats-chooser', options=stats_options)],
-             style={'max-width':'200px'}),
-    
-    
-    html.H3('Select date range for data'),
-    
-    dcc.DatePickerRange(
-        
-        id='training_range_picker',
-        min_date_allowed = dt.date(1900, 1, 1),
-        max_date_allowed = dt.datetime.today(),
 
-        ## Default example dates
-        start_date = dt.datetime(2018,3,4),
-        end_date = dt.datetime(2018,6,20)
-    ),
-    
-    
-#     dcc.DatePickerRange(
-        
-#         id='training_range_picker',
-#         min_date_allowed = dt.date(1900, 1, 1),
-#         end_date= dt.datetime.now(),
+                    html.Div(children=[
+                        html.H1(children='Basic Forecast'),
 
-#         initial_visible_month = dt.datetime.now()),
-        
-        
-#     dcc.DatePickerSingle(
-        
-#         id='test_date_picker',
-#         min_date_allowed = dt.date(1900, 1, 1),
-#         date=dt.datetime.now()),
-    
-    html.Button('Search', id='run_search', n_clicks_timestamp='0'),
+                        html.Div(children=[
+                            html.Label('Input stock ticker:',
+                                       style={'margin-right':'10px', 'font':'16px '+major_fonts}),
 
-    html.Button('Analyze', id='run_analysis', n_clicks_timestamp='0'),
-    
-    html.Div(dcc.Input(id='forecast_range', value='', type='text')),
+                            dcc.Input(id='online_input', value='AMZN', type='text',
+                                      style={'width':'1in'}
+                                     )],
 
-    html.Div(id='output_graph'),
+                                 style={'display':'inline-block'}),
+
+                    ],
+
+                             style={'display':'inline-block', 'margin-right':'10px'}),
+
+
+                    html.Div(children=[
+
+                            html.Div(children=[
+                                html.H3('Select date range for data', style={'display':'inline', 'margin-right':'35px'}),
+                                html.Button('Search', id='run_search', n_clicks_timestamp='0', style={'display':'inline'})],
+                                  ),
+
+
+                            dcc.DatePickerRange(
+
+                                id='training_range_picker',
+                                min_date_allowed = dt.date(1900, 1, 1),
+                                max_date_allowed = dt.datetime.today(),
+
+                                ## Default example dates
+                                start_date = dt.datetime(2018,3,4),
+                                end_date = dt.datetime(2018,6,20)
+                            )
+                    ],
+
+                            style={'display':'inline-block'})  
+        ],
+                 style={'ddisplay':'inline-block'}
+                )
+    ],
+             style={'float':'left', 'margin-right':'150px'}), # To push second set of columns right
     
-    html.Div(id='range_slider'),
+
+    
+    
+    ## 2nd extra-dimensional div to push set right
+    html.Div(children=[
+        ## Second set of two columns
+        html.Div(children=[
+
+            html.Div(children=[
+
+                html.Div(children=[
+
+                    html.Label("Statistical Options:",
+                               style={'margin-right':'10px', 'font':'bold 16px Arial'}),
+
+                    html.Button('Analyze', id='run_analysis', n_clicks_timestamp='0'),
+                
+                    dcc.Checklist(
+                        options=[
+                            {'label': 'keep analyzing', 'value': 1}],
+                        values = 0)],
+                         
+                         ## Button font makes the box gray for some reason, style={'font':'15px Arial'}
+                         style={'margin-top':'30px','float':'left'}),
+
+
+                html.Div(children=[
+                    html.Label('Forecasting or in-sample'),
+                    dcc.Dropdown(id='stats-chooser', options=stats_options)],
+                         style={'margin-top':'75px','max-width':'200px',
+                                'margin-right':'20px'}),
+
+                html.Div(children=[
+                    html.Label('Statistical analysis:'),
+                    dcc.Dropdown(id='stats-function', options=stats_functions)],
+                             style={'margin-top':'15px','max-width':'200px',
+                                   'margin-right':'20px'}),
+            ],
+
+                style={'display':'inline-block'}),
+
+             html.Div(children=[
+    #              html.Button('Save graph', id='save_graph', n_clicks_timestamp='0'),
+    #              html.Button('Reset', id='reset', n_clicks_timestamp='0'),
+                 html.Div(children=[
+                     html.Label("Periods to forecast ahead"),
+                     html.Div(children=[
+                         dcc.Input(id='forecast_range', value='', type='text')],
+                                   style={'margin-top':'10px'})]),
+                 ],
+                      style={'display':'inline-block', 'vertical-align': '300%'})
+        ],
+                  style={'display':'inline-block', 'font': '16px '+minor_fonts})
+        
+                         ],
+             
+             style={}), # I could have a 'float':'right' style here, but that would
+                        # put it too far to the right, instead used margins in previous
+
+    
+
+
+    html.Div(id='output_graph', style={}),
+    
+    html.Div(id='range_slider', style={}),
     
     html.Div('range_slider'),
     
@@ -121,77 +186,10 @@ app.layout = html.Div(children=[
     html.Div(id='signal', style={'display': 'none'}),
     
     ## Hidden state value for statistical data
-    html.Div(id='stats-data', style={'display': 'none'})
-#     dcc.Storageorage(id='stats-data')
+#     html.Div(id='stats-data', style={'display': 'none'})
+    dcc.Store(id='stats-data')
 
 ])
-
-
-
-
-
-## Old way.
-# app.layout = html.Div(children=[
-    
-#     html.H1(children='Basic Forecast'),
-        
-#     dcc.Input(id='online_input', value='AMZN', type='text'),
-    
-#     dcc.DatePickerRange(
-        
-#         id='training_range_picker',
-#         min_date_allowed = dt.date(1900, 1, 1),
-#         max_date_allowed = dt.datetime.today(),
-
-#         ## Default example dates
-#         start_date = dt.datetime(2018,3,4),
-#         end_date = dt.datetime(2018,6,20)),        
-    
-#     html.Button('Search', id='run_search', n_clicks_timestamp='0'),
-
-    
-    
-    
-    
-    
-#     html.Div(dcc.Input(id='forecast_range', value='', type='text')),
-        
-#     html.Button('Analyze', id='run_analysis', n_clicks_timestamp='0'),
-    
-#     html.Div(id='dropdown box', children=[
-        
-#         dcc.Dropdown(id='stats-function', options=stats_functions),
-        
-#         dcc.Dropdown(id='stats-chooser', options=stats_options),
-
-#     ],
-#             style = {'float': 'left', 'width':'10%'}),
-    
-# #     dcc.Dropdown(id='stats-function', options=stats_functions),
-    
-# #     dcc.Dropdown(id='stats-chooser', options=stats_options),
-    
-    
-    
-    
-    
-    
-#     html.Div(id='output_graph'),
-    
-#     html.Div(id='range_slider'),
-    
-#     html.Div('range_slider'),
-    
-#     ## Hidden signal value for graph data
-#     html.Div(id='signal', style={'display': 'none'}),
-    
-#     ## Hidden state value for statistical data
-#     html.Div(id='stats-data', style={'display': 'none'})
-# #     dcc.Storageorage(id='stats-data')
-
-# ])
-
-
 
 
 
@@ -211,7 +209,7 @@ def get_data(data_input, start_train_date, end_train_date):
         data.set_index('date', inplace=True)
         name = data_input
         
-        ## Damn quandl date error-handling
+        ## Quandl date error-handling
         if (data.index[-1] != start_date) or (data.index[0] != end_date):
             return [data.to_json(), str(dt_end_date)]
         else:
