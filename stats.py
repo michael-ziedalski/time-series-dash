@@ -2,16 +2,15 @@
 import pandas as pd
 from pyramid.arima import auto_arima as auto
 
-
 ## To perform in-sample forecasting.
 def in_sample(marks, data, stats='SARIMA'):
     
     data.dropna(inplace=True)
     
-    training = data.iloc[marks[0] : marks[1], 1]
-    testing = data.iloc[marks[1] : marks[2], 1]
-        
-    nahead = marks[2] - marks[1]
+    training = data.loc[marks[0] : marks[1]].iloc[:,1]
+    testing = data.loc[marks[1] : marks[2]].iloc[:,1]
+
+    nahead = len(testing)
     
     
     ## Fitting and forecasting procedures
@@ -26,7 +25,6 @@ def in_sample(marks, data, stats='SARIMA'):
     full_forecast = pd.Series(data=forecast, index=testing.index)
     
     return [full_forecast, conf_int]
-
 
 ## To perform out-of-sample forecasting.
 def out_sample(marks, nahead, data, stats='SARIMA', frequency='D'):
