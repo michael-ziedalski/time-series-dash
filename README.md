@@ -1,8 +1,8 @@
 # time-series-dash
-Just an acorn of a time-series visualization project with Python using Dash; under heavy development.
+Just an acorn of a time-series visualization project, using Python with Dash; under heavy development.
 
-On the surface, gui has far to go to look passable, and code underneath will probably undergo many changes as Dash (the underlying library) matures. 
+Gui under constant revision, and internal will likely change over time as Dash matures.
 
-More statistical routines are planned to be added. Currently only SARIMA available.
+Currently only statistical routine implemented is SARIMA.
 
-To run, simply set up a redis server with 'redis-server' in terminal and fire off app.py.
+To run, simply set up a redis server with 'redis-server' in terminal and fire off app.py, or host via herokue by cloning this repo and following these instructions: https://dash.plot.ly/deployment
