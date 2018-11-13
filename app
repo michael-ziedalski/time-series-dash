@@ -28,11 +28,9 @@ from data_input import add_years
 
 
 ## Statistical functions available.
-stats_functions = [{'label': 'SARIMA', 'value': 'SARIMA'},
-                 {'label': 'GARCH', 'value': 'GARCH'}]
+stats_functions = [{'label': 'SARIMA', 'value': 'SARIMA'}]
 ## Available ptions for statistical routines (only two for now). 
-stats_options = [{'label': 'in-sample', 'value': 'insample'},
-                 {'label': 'forecast', 'value': 'forecast'}]  
+stats_options = [{'label': 'in-sample', 'value': 'insample'}]  
 
 ## Fonts
 # Major label fonts
@@ -59,6 +57,8 @@ CACHE_CONFIG = {
 cache = Cache()
 cache.init_app(app.server, config=CACHE_CONFIG)
 
+## For Heroku
+server = app.server
 
 
 ## New way
@@ -90,7 +90,7 @@ app.layout = html.Div(children=[
                     html.Div(children=[
 
                             html.Div(children=[
-                                html.H3('Select date range for data', style={'display':'inline', 'margin-right':'35px'}),
+                                html.H3('Select date range for data', style={'display':'inline', 'margin-right':'50px'}),
                                 html.Button('Search', id='run_search', n_clicks_timestamp='0', style={'display':'inline'})],
                                   ),
 
@@ -107,12 +107,12 @@ app.layout = html.Div(children=[
                             )
                     ],
 
-                            style={'display':'inline-block'})  
+                            style={'margin-top':'28px'})  
         ],
-                 style={'ddisplay':'inline-block'}
+                 style={'display':'inline-block'}
                 )
     ],
-             style={'float':'left', 'margin-right':'150px'}), # To push second set of columns right
+             style={'float':'left', 'margin-right':'90px'}), # To push second set of columns right a certain amount
     
 
     
@@ -129,15 +129,10 @@ app.layout = html.Div(children=[
                     html.Label("Statistical Options:",
                                style={'margin-right':'10px', 'font':'bold 16px Arial'}),
 
-                    html.Button('Analyze', id='run_analysis', n_clicks_timestamp='0'),
-                
-                    dcc.Checklist(
-                        options=[
-                            {'label': 'keep analyzing', 'value': 1}],
-                        values = 0)],
-                         
-                         ## Button font makes the box gray for some reason, style={'font':'15px Arial'}
-                         style={'margin-top':'30px','float':'left'}),
+                    html.Button('Analyze', id='run_analysis', n_clicks_timestamp='0')],
+                                ## Setting button font style={'font':'15px Arial'} makes its box gray
+                         style={'margin-top':'30px','float':'left',
+                                'border-bottom': '2px solid black', 'width': '100%'}),
 
 
                 html.Div(children=[
@@ -162,7 +157,8 @@ app.layout = html.Div(children=[
                      html.Label("Periods to forecast ahead"),
                      html.Div(children=[
                          dcc.Input(id='forecast_range', value='', type='text')],
-                                   style={'margin-top':'10px'})]),
+                                   style={'margin-top':'10px'})],
+                             style={'position':'relative','margin-top':'10px'}),
                  ],
                       style={'display':'inline-block', 'vertical-align': '300%'})
         ],
@@ -186,11 +182,10 @@ app.layout = html.Div(children=[
     html.Div(id='signal', style={'display': 'none'}),
     
     ## Hidden state value for statistical data
-#     html.Div(id='stats-data', style={'display': 'none'})
-    dcc.Store(id='stats-data')
+    html.Div(id='stats-data', style={'display': 'none'})
+#     dcc.Storageorage(id='stats-data')
 
 ])
-
 
 
 @cache.memoize()
