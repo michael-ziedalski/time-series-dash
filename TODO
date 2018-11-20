@@ -1,0 +1,11 @@
+Updated list of what needs to be done, in order of relative importance.
+
+Features:
+  1. Finish the forecasting feature.
+  2. Add GARCH model
+  3. Add button to keep analyzing data (i.e. running models) as user messes around with the dates.
+  4. Find a way to keep track of all successfully run models in memory, and reuse them if same inputs are given.
+  
+  Bugs:
+    1. On small datasets (>~30), the data doesn't start at the graph's axes, causing the rangeslider to not line up,
+    (should be a fix in specifying the graph's axes).
